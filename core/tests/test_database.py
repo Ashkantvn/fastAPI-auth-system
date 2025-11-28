@@ -1,4 +1,4 @@
-from sqlalchemy import text
+from sqlalchemy import text, inspect
 from database import engine
 
 class TestDatabase:
@@ -6,7 +6,7 @@ class TestDatabase:
         result = db_session.execute(text("SELECT 1")).scalar()
         assert result == 1
 
-    def test_user_table_exists(self):
-        inspector = engine.inspect(engine)
+    def test_user_table_exists(self, db_session):
+        inspector = inspect(engine)
         tables = inspector.get_table_names()
         assert "user" in tables

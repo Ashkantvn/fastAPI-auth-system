@@ -1,24 +1,16 @@
 import pytest
-from database import Session, Base, get_db, engine
+from database import Session, Base, engine
 from main import app
 
-Base.metadata.create_all(bind=engine)
 
 @pytest.fixture
 def db_session():
+    Base.metadata.create_all(bind=engine)
     test_session = Session()
     try:
         yield test_session
     finally:
+        Base.metadata.drop_all(bind=engine)
         test_session.close()
-
-def override_get_db():
-    db = Session()
-    try:
-        yield db
-    finally:
-        db.close()
-
-app.dependency_overrides[get_db] = override_get_db
 
 
