@@ -5,3 +5,6 @@ psycopg2-binary
 pytest
 passlib
 bcrypt
+python-jose
+cryptography
+httpx
