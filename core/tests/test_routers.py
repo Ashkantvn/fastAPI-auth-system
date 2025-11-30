@@ -1,4 +1,5 @@
 from fastapi.testclient import TestClient
+from models.db.user_model import User
 from main import app
 
 class TestRouters:
@@ -31,7 +32,7 @@ class TestRouters:
         assert response.status_code == 400
         assert response.json()["detail"] == "Incorrect username or password"
 
-    def test_signup_route_201(self):
+    def test_signup_route_201(self, db_session):
         response = self.client.post(
             "api/v1/users/signup",
             json={"username": "newuser", "password": "newpassword"}
@@ -40,8 +41,8 @@ class TestRouters:
         assert response.json()["data"] == "User created successfully"
         assert "access_token" in response.json()
         # Test user is created
-        profile_response = self.client.get("api/v1/users/profile/newuser")
-        assert "profile" in profile_response.json()
+        profile_exist = db_session.query(User).filter_by(username="newuser").first()
+        assert profile_exist is not None
 
     def test_signup_route_400(self, user):
         response = self.client.post(
@@ -60,12 +61,12 @@ class TestRouters:
         assert response.status_code == 401
         assert response.json()["detail"] == "Not authenticated"
 
-    def test_delete_user_route_204(self, user, auth_client):
+    def test_delete_user_route_204(self, user, db_session, auth_client):
         response = auth_client.delete(f"api/v1/users/delete")
         assert response.status_code == 204
         # Verify user is deleted
-        profile_response = self.client.get(f"api/v1/users/profile/{user.username}")
-        assert "detail" in profile_response.json()
+        profile_exist = db_session.query(User).filter_by(username=user.username).first()
+        assert profile_exist is None
 
     def test_delete_user_route_401(self):
         response = self.client.delete("api/v1/users/delete")
