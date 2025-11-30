@@ -1,7 +1,7 @@
 import pytest
 from database import Session, Base, engine
 from main import app
-from models.user_model import User
+from models.db.user_model import User
 from fastapi.testclient import TestClient
 
 @pytest.fixture
@@ -34,7 +34,7 @@ def user(db_session):
 def auth_client(user):
     client = TestClient(app)
     resp = client.post(
-        "/token",
+        "/api/v1/users/token",
         data={"username": user.username, "password": "testpassword"}
     )
     if resp.status_code != 200:

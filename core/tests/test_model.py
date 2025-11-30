@@ -1,4 +1,4 @@
-from models.user_model import  User
+from models.db.user_model import  User
 
 class TestModel:
     def test_user_model(self):
