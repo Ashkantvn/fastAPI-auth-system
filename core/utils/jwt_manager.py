@@ -17,6 +17,7 @@ def create_access_token(user_id: str) -> str:
     return encoded_jwt
 
 def verify_access_token(token: str) -> str:
+    # Check if token is blacklisted in real implementation
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         user_id: str = payload.get("user_id")
