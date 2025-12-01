@@ -8,7 +8,7 @@
 - JWT (token creation and verification)
 - Password hashing (bcrypt / passlib)
 - Docker & Docker Compose
-- pytest (API and integration tests)
+- pytest (API tests)
 
 **Folder Structure:**
 - `core/`: application package containing main app and submodules
